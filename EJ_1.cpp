@@ -111,13 +111,13 @@ int main()
                     }
                 }
                 for(auto node: nodes){
-                    //aca tengo tantos paths como parents. Por lo tanto lo que hago es un vector que empieza en node, y luego cada path
+                    int count = 2;
                     for(auto p: get<0>(tree)[node]){
                         vector<int> path = getPath(get<0>(tree), p);
                         path.push_back(node);
                         for(int i=0; i<path.size(); i++){
                             cout << path[i] << " ";
-                        }cout << endl;
+                        }cout << endl; count--; if(count == 0){return 0;}
                     }
                 }
             }
