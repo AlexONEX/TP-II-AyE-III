@@ -1,9 +1,24 @@
 #include<bits/stdc++.h>
 #include "graph.h"
 #include <tuple>
+#include <vector>
 
 using namespace std;
 
+Graph::Graph(int V, list<Edge> edgeList) : edgeList_(edgeList), V_(V), M_(edgeList.size()){}
+ 
+vector<int> Graph::neighbors(int v, Graph G){
+    vector<int> neighbors;
+    for(Edge e : G.edgeList_){
+        if(e.first == v){
+            neighbors.push_back(e.second);
+        }
+        else if(e.second == v){
+            neighbors.push_back(e.first);
+        }
+    }
+    return neighbors;
+} 
 int level(vector<int> parents, int v){
     if(parents[v] == -1){
         return 0;
