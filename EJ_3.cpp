@@ -57,25 +57,25 @@ void Digraph::addSourceVertex(){
 }
 
 vector<vector<int>> Digraph::Johnson(){ 
-    addSourceVertex();      //Added s as the last vertex in the graph
+    addSourceVertex();                          //Added s as the last vertex in the graph
     vector<vector<int>> dist(V_, vector<int>(V_, numeric_limits<int>::max()));
     vector<int> distances = BellmanFord(this->V_-1); 
     if(dist.size() == 0){
         return vector<vector<int>>();
     }
-    /*
-    for each vertex v ∈ G'.V
-        set h(v) to the value of δ (s , v)
-        computed by the Bellman-Ford algorithm
-        for each edge (u, v) ∈ G'.E
-            ŵ(u, v) = w( u, v ) + h( u) − h( v)
-            let D = (duv) be a new n × n matrix
-            for each vertex u ∈ G.V
-                run DIJKSTRA( G , ŵ , u) to compute di( u, v)
-                for all v ∈ G.V
-            for each vertex v ∈ G.V
-                minPath v->u = di(u,v) - h(v) + h(u), for all u ∈ G.V, 
-    */ 
+    Digraph G_n = {V_-1};                       //don't need to add source vertex
+    for(int v = 0; v < V_-1; v++){
+        for(auto w: adjList_[v]){
+            int new_cost = w.second + distances[w.first] - distances[v];
+            G_n.addEdge(v, w.first, new_cost);
+        }
+    }
+    vector<vector<int>> distanceToAllNodes;
+    for(int v = 0; v < G_n.V_; v++){
+        vector<int> dist = G_n.Dijkstra(v);
+        distanceToAllNodes.push_back(dist);
+    }
+    return distanceToAllNodes;
 }
 
 

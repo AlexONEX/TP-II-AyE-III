@@ -14,7 +14,10 @@ using Edge = pair<int, int>;
 struct Digraph{
     int V_;                         // No. of vertices.
     vector<vector<Edge>> adjList_;  // Adjacency List.
-    Digraph(int V);            // Constructor
+    Digraph(int V){
+        V_ = V;
+        adjList_= vector<vector<Edge>>(V_);
+    }            // Constructor
     void addEdge(int v, int w, int c);     // Self explanatory.
     vector<int> Dijkstra(int source);
     vector<int> BellmanFord(int source);
