@@ -1,15 +1,12 @@
 #include<bits/stdc++.h>
-#include "graph.h"
 #include <tuple>
-
+#include <vector>
+#include <list>
+#include <queue>
+#include <utility>
+#include <limits>
+#include "EJ_1.h"
 using namespace std;
-
-int level(vector<int> parents, int v){
-    if(parents[v] == -1){
-        return 0;
-    }
-    return 1 + level(parents, parents[v]);
-}
 
 int parent(vector<vector<int>> parents, int v){
     if(parents[v].size() == 0){
@@ -17,37 +14,7 @@ int parent(vector<vector<int>> parents, int v){
     }
     return parents[v][0];
 }
-tuple<vector<vector<int>>, bool, int> Graph::bfsMinPathCounter(int s){     //BFS contando distancias desde source a todos los vertices. La idea sería correr esto n veces. No me da la complejidad. 
-    vector<bool> visited(this->V_, false);
-    vector<vector<int>> pred(this->V_, vector<int>());
-    vector<int> dist(this->V_, numeric_limits<int>::max());
-    vector<int> paths(this->V_, 0);
-    bool isGeodetic = true;
-    queue<int> q;
-    q.push(s);
-    visited[s] = true;
-    dist[s] = 0; paths[s] = 1;
-    while(!q.empty()){
-        int v = q.front();
-        q.pop();
-        for(int w : neighbors(v, *this)){
-            if(!visited[w]){
-                visited[w] = true;
-                pred[w].push_back(v); 
-                q.push(w);
-            }
-            if(dist[w] > dist[v] + 1){
-                dist[w] = dist[v] + 1;
-                paths[w] = paths[v];
-            }
-            else if(dist[w] == dist[v]+1){  //Tengo otro parent. 
-                paths[w] += paths[v];
-                pred[w].push_back(v); isGeodetic = false;
-            }
-        }
-    }
-    return make_tuple(pred, isGeodetic, s);
-}
+
 vector<int> getPath(vector<vector<int>> parents, int v){
     vector<int> path;
     while(parents[v].size() > 0){
@@ -59,12 +26,44 @@ vector<int> getPath(vector<vector<int>> parents, int v){
     return path;
 }
 
+tuple<vector<vector<int>>, bool, int> Graph::bfsMinPathCounter(int s){   
+    vector<bool> visited(this->V_, false);
+    vector<vector<int>> pred(this->V_, vector<int>());
+    vector<int> dist(this->V_, numeric_limits<int>::max());
+    vector<int> paths(this->V_, 0);
+    bool isGeodetic = true;
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+    dist[s] = 0; paths[s] = 1;
+    while(!q.empty()){
+        int v = q.front(); q.pop();
+        for(auto w: this->adjList_[v]){
+            if(!visited[w]){
+                visited[w] = true;
+                pred[w].push_back(v);   
+                q.push(w);
+            }
+            if(dist[w] > dist[v] + 1){  
+                dist[w] = dist[v] + 1;
+                paths[w] = paths[v];
+            }
+            else if(dist[w] == dist[v]+1){  
+                paths[w] += paths[v];
+                pred[w].push_back(v); 
+                isGeodetic = false;
+            }
+        }
+    }
+    return make_tuple(pred, isGeodetic, s);
+}
+
 int main()
 {
     int V = 4;
-    list<Edge> edgeList = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}};
-    //list<Edge> edgeList = {{0, 1}, {0, 2}, {1, 2}, {0, 3}};
-    Graph g(V, edgeList);
+    Graph g(V, {});
+    g.addEdge(0, 1); g.addEdge(0, 2); g.addEdge(1, 2); g.addEdge(2, 0); g.addEdge(2, 3); g.addEdge(3, 3);
+
     vector<tuple<vector<vector<int>>, bool, int>> trees;    //Almaceno predecesores, si es geodetic, y la raíz.
     int check=0;
     for(int i=0; i<V; i++){

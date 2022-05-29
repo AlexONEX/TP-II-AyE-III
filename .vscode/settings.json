@@ -1,12 +1,17 @@
 {
     "files.associations": {
-        "limits": "cpp",
-        "tuple": "cpp",
-        "utility": "cpp",
         "iostream": "cpp",
+        "tuple": "cpp",
+        "limits": "cpp",
+        "array": "cpp",
         "hash_map": "cpp",
         "bitset": "cpp",
-        "chrono": "cpp",
-        "algorithm": "cpp"
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "regex": "cpp",
+        "utility": "cpp",
+        "valarray": "cpp"
     }
 }
