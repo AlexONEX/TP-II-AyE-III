@@ -118,9 +118,11 @@ vector<int> PathMinimoN2(Graph G, int s) {
 
 int main() {
     //input -> n: cantidad de intervalos, n lineas con intervalos [A, B]
-    int cantidadIntervalos = 5;
-    vector<Intervalo> I = { {0,6},{1,3},{2,4},{5,8},{7,9} };
+    int cantidadIntervalos; cin >> cantidadIntervalos;
+    vector<Intervalo> I(cantidadIntervalos);
     for (int i = 0; i < I.size(); i++) {
+        int a, b; cin >> a >> b;
+        I[i] = {a,b};
         I[i].origin = i;
     }
     Graph G = armarGrafo(I);
@@ -136,3 +138,4 @@ int main() {
     }
     return 0;
 }
+
