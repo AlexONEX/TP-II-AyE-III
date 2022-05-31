@@ -98,6 +98,17 @@ Digraph loadFromFile(){
 
 int	main()
 {
+    /*
+    int N, M; cin >> N >> M;
+    Digraph g(V);
+    int M; cin >> M;
+    while (M > 0) {
+    	int a,b,w; cin >> a >> b >> w;
+    	g.addEdge(a, b, w);
+    	M--;
+    }
+    */
+    
     //Test BellmanFord
     Digraph g(5);
     g.addEdge(0, 1, -1);
