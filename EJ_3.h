@@ -20,8 +20,8 @@ struct Digraph{
     }            // Constructor
     void addEdge(int v, int w, int c);     // Self explanatory.
     vector<int> Dijkstra(int source);
-    vector<int> BellmanFord(int source);
-    vector<vector<int>> Johnson();
+    bool BellmanFord(vector<int> &dist, vector<int> parents, int source);
+    void Johnson();
     void addSourceVertex();
 };
 

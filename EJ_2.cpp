@@ -37,11 +37,15 @@ Se conoce el conteo Kᵢ de componentes conexas de G(M) contenidas en Rᵢ, que 
 Con dicho invariante, se propone el siguiente método para procesar la fila i+1:
 Sea F el subgrafo inducido por G(M) al quitar todos los vertices no correspondientes a la fila por procesar,
 asignar a cada vértice de la fila i+1 un identificador exclusivo a la componente conexa en F a la que pertence.
-Sea I el subgrafo inducido por G(M) al quitar todos los vertices no correspondientes a las filas i e i+1, y sea C una compresión de I al reemplazar cada conjunto de vértices con mismo identificador y misma fila por un único vértice, realizar un único recorrido del grafo C para identificar sus componentes conexas.
+Sea I el subgrafo inducido por G(M) al quitar todos los vertices no correspondientes a las filas i e i+1, y sea C una compresión de I al 
+reemplazar cada conjunto de vértices con mismo identificador y misma fila por un único vértice, realizar un único recorrido del grafo C para 
+identificar sus componentes conexas.
 Incrementar el conteo K según la cantidad de vértices de C en la fila i que estén aislados.
-Almacenar para cada vertice de G(M) en la fila i+1, un identificador exclusivo a la componente conexa en C a la que pertence el vértice dentro del cual fue comprimido, pues será de utilidad en la próxima iteración.
+Almacenar para cada vertice de G(M) en la fila i+1, un identificador exclusivo a la componente conexa en C a la que pertence el vértice dentro del 
+cual fue comprimido, pues será de utilidad en la próxima iteración.
 
-El recorrido del grafo C es realizable en complejidad temporal y espacial de orden n, siendo n el largo de cada fila, pues se tiene que C es un grafo planar con no más de 2*⌈n/2⌉ vertices, lo cual implica que como máximo alberga 3*2*⌈n/2⌉ aristas.
+El recorrido del grafo C es realizable en complejidad temporal y espacial de orden n, siendo n el largo de cada fila, pues se tiene que C es un 
+grafo planar con no más de 2*⌈n/2⌉ vertices, lo cual implica que como máximo alberga 3*2*⌈n/2⌉ aristas.
 Tras iterar sobre las m filas de la matriz, se logra una complejidad temporal de O(n*m)
 
 Como para efectuar cada iteración solo es necesario conocer los identificadores de las componentes conexas en Rᵢ de los vértices correspondientes a la última fila procesada, cuya cantidad no puede exceder ⌈n/2⌉, se logra una complejidad espacial O(n) para todo el algoritmo, sin icluir el espacio donde inicie almacenada la matriz de entrada M.
