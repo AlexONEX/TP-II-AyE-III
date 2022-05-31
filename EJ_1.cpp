@@ -58,23 +58,18 @@ tuple<vector<vector<int>>, bool, int> Graph::bfsMinPathCounter(int s){
     return make_tuple(pred, isGeodetic, s);
 }
 
-int main()
-{
-    int V = 4;
-    Graph g(V, {});
-    g.addEdge(0, 1); g.addEdge(0, 2); g.addEdge(1, 2); g.addEdge(2, 0); g.addEdge(2, 3); g.addEdge(3, 3);
-
+void driver(Graph g){
     vector<tuple<vector<vector<int>>, bool, int>> trees;    //Almaceno predecesores, si es geodetic, y la raíz.
     int check=0;
-    for(int i=0; i<V; i++){
+    for(int i=0; i<g.V_; i++){
         trees.push_back(g.bfsMinPathCounter(i));
         check+=get<1>(trees[i]);
     }
-    if(check==V){
+    if(check==g.V_){
         cout << "1" << endl;
         for(auto tree: trees){
             vector<vector<int>> pred = get<0>(tree);
-            for(int node=0; node<V; node++){
+            for(int node=0; node<g.V_; node++){
                 int grand = parent(pred, node);
                 if(grand == -1){
                     cout << get<2>(tree) << " ";
@@ -102,12 +97,22 @@ int main()
                         path.push_back(node);
                         for(int i=0; i<path.size(); i++){
                             cout << path[i] << " ";
-                        }cout << endl; count--; if(count == 0){return 0;}
+                        }
+                        cout << endl; count--; if(count == 0){return;}  //Version fea para imprimir como piden
                     }
                 }
             }
         }
     }
+}
+
+int main()
+{
+    int V = 5;
+    Graph g(V);
+    g.addEdge(4, 0); g.addEdge(1,4); g.addEdge(2,4); g.addEdge(3,4);
+    driver(g);
+
     return 0;
 }
 

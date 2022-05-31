@@ -30,7 +30,8 @@ vector<int> Digraph::BellmanFord(int source){
 vector<int> Digraph::Dijkstra(int source){
     vector<int> dist(V_, numeric_limits<int>::max());
     dist[source] = 0;
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;     
+    //Pair (wieght, vertex), greater<pair<int, int>> is used to sort the queue in descending order
     pq.push(make_pair(0, source));
     while(!pq.empty()){     // O(E log V) 
         int v = pq.top().second;
@@ -62,6 +63,7 @@ vector<vector<int>> Digraph::Johnson(){
     vector<int> distances = BellmanFord(this->V_-1); 
     if(dist.size() == 0){
         return vector<vector<int>>();
+        //print negative weight cycle
     }
     Digraph G_n = {V_-1};                       //don't need to add source vertex
     for(int v = 0; v < V_-1; v++){
@@ -73,17 +75,38 @@ vector<vector<int>> Digraph::Johnson(){
     vector<vector<int>> distanceToAllNodes;
     for(int v = 0; v < G_n.V_; v++){
         vector<int> dist = G_n.Dijkstra(v);
-        distanceToAllNodes.push_back(dist);
+        //Print dist
+        //dist.clear();
+        distanceToAllNodes.push_back(dist);     //O(mn) Space complexity
     }
     return distanceToAllNodes;
 }
 
+Digraph loadFromFile(){
+    string s;
+    int N, M;
+    cin >> s >> N >> M;
+    Digraph G(N);
+    for(int i = 0; i < M; i++){
+        int u, v, w;
+        cin >> u >> v >> w;
+        G.addEdge(u, v, w);
+    }
+    
+    int k = 0;
+}
 
 int	main()
 {
     //Test BellmanFord
     Digraph g(5);
-    //addEdges and test BellmanFord and Dijkstra
-
+    g.addEdge(0, 1, -1);
+    g.addEdge(0, 2, 4);
+    g.addEdge(1, 2, 3);
+    g.addEdge(1, 3, 2);
+    g.addEdge(1, 4, 2);
+    g.addEdge(3, 2, 5);
+    g.addEdge(3, 1, 1);
+    vector<vector<int>> dist = g.Johnson();
     return 0;
 }
