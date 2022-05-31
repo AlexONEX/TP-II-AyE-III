@@ -108,9 +108,14 @@ void driver(Graph g){
 
 int main()
 {
-    int V = 5;
+    int V; cin >> V;
     Graph g(V);
-    g.addEdge(4, 0); g.addEdge(1,4); g.addEdge(2,4); g.addEdge(3,4);
+    int M; cin >> M;
+    while (M > 0) {
+    	int a,b; cin >> a >> b;
+    	g.addEdge(a, b);
+    	M--;
+    }
     driver(g);
 
     return 0;
