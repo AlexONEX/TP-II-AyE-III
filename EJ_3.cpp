@@ -83,7 +83,6 @@ void Digraph::Johnson(){
     };
 }
 
-
 int	main(){
     //Test BellmanFord
     Digraph g(5);
