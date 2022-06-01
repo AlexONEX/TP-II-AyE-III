@@ -1,30 +1,30 @@
 #include <iostream>
 #include <vector>
-#include <list>
 #include <queue>
-#include <utility>
-#include <limits>
+#include <algorithm>
 #include <tuple>
-#include <vector>
 
 using namespace std;
 
-using Edge = pair<int, int>;
+typedef pair<int, int> Edge;
 
 struct Digraph{
-    int V_;                         // No. of vertices.
-    vector<vector<Edge>> adjList_;  // Adjacency List.
+    int V_;  
+    int E_;                       
+    vector<vector<Edge>> adjList_;  
     Digraph(int V){
         V_ = V;
+        E_ = 0;
         adjList_= vector<vector<Edge>>(V_);
-    }            // Constructor
-    void addEdge(int v, int w, int c);     // Self explanatory.
+    }            
+    void addEdge(int h, int t, int w);     
     vector<int> Dijkstra(int source);
-    bool BellmanFord(vector<int> &dist, vector<int> parents, int source);
+    bool BellmanFord(vector<int> &dist, int source);
     void Johnson();
     void addSourceVertex();
 };
 
-void Digraph::addEdge(int v, int w, int c){
-    adjList_[v].push_back(Edge(w, c));
+void Digraph::addEdge(int t, int h, int w){ // h: head, t: tail, w: weight
+    adjList_[t].push_back(make_pair(h, w)); 
+    E_++;
 }
