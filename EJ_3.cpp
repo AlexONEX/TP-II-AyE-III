@@ -84,38 +84,30 @@ vector<int> Digraph::Dijkstra(int source){
 
 void Digraph::Johnson(){ 
     vector<int> distances;
-    bool ngc = BellmanFord(distances, 0);
+    bool ngc = BellmanFord(distances, 0);   //O(nm)
     if(!ngc){
-        addSourceVertex();   //Added s as the last vertex in the graph
-        BellmanFord(distances, V_-1);      //O(E^2)
-        Digraph G_n = {V_-1};              //don't need to add source vertex
-        for(int v = 0; v < V_-1; v++){
-            for(auto w: adjList_[v]){
+        addSourceVertex();   //Added s as the last vertex in the graph. O(n)
+        BellmanFord(distances, V_-1);      //O(nm)
+        Digraph G_n = {V_-1};              //O(n)
+        for(int v = 0; v < V_-1; v++){     //O(n)
+            for(auto w: adjList_[v]){      //O(m)
                 int new_cost = w.second + distances[v] - distances[w.first];
                 //c'(v,w) = c(v,w) + h(v) - h(w)
                 G_n.addEdge(v, w.first, new_cost);
             }
         }
         cout << "1" << endl;
-        for(int v = 0; v < G_n.V_; v++){
-            vector<int> dist = G_n.Dijkstra(v);
-            //Undo the sum c'(v,w) = c(v,w) + h(v) - h(w)
+        for(int v = 0; v < G_n.V_; v++){            //O(n)
+            vector<int> dist = G_n.Dijkstra(v);     //O(m.log(n))
+            //Undo the reweigthing of the edges. c'(v,w) = c(v,w) + h(v) - h(w)
             //Now c(v,w) = c'(v,w) - h(v) + h(w)
-            vector<int> real_distances;
-            for(int w = 0; w < G_n.V_; w++){
+            for(int w = 0; w < G_n.V_; w++){        //O(n)
                 if(dist[w] != INF){
-                    int new_cost = dist[w] - distances[v] + distances[w];
-                    real_distances.push_back(new_cost);
+                    cout << (dist[w] - distances[v] + distances[w]) << " ";
                 }
                 else{
-                    real_distances.push_back(INF);
+                    cout << "INF ";
                 }
-            }
-            for(int i=0; i<real_distances.size(); i++){
-                if(real_distances[i] != INF){
-                    cout << real_distances[i] << " ";
-                }
-                else{cout << "INF ";}
             }
         cout << endl;
         dist.clear();    //O(m) Space complexity
