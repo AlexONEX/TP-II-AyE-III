@@ -14,14 +14,13 @@ typedef vector< vector<arista> > Graph;
 
 bool overlap(Intervalo& i, Intervalo& j) {
     if (//overlap completo
-        (i.a < j.a && i.b > j.b) ||
-        (i.a < j.a && i.b > j.a)) {
+        i.a < j.a && j.a < i.b && i.b < j.b) {
         return true;
     }
     return false;
 }
 
-Graph armarGrafo(vector<Intervalo> &I) {
+Graph armarGrafo(vector<Intervalo> &I, vector<bool> cont) {
     int n = I.size();
     // agrego el I_0 y el I_n+1
     Intervalo I_0 = { -2,-1,-1 };
@@ -38,19 +37,24 @@ Graph armarGrafo(vector<Intervalo> &I) {
     for (int i = 0; i < I.size(); i++) {
         int noOverlap_minB = 2 * n + 2;
         for (int j = i + 1; j < I.size(); j++) {
+            if(I[j].a>I[i].b){
+                noOverlap_minB = min(noOverlap_minB, I[j].b);
+            }
+            //if(cont[j]) continue;
+            if(cont[I[j].origin]) continue;
             if (overlap(I[i], I[j])) {
                 //esta en B
-                cout << "Esta en B: " << i << " " << j << endl;
+                //cout << "Esta en B: " << i << " " << j << endl;
                 B[i].push_back({ j,0 });
             }
             else {
                 //no overlapea
                 if (I[j].a < noOverlap_minB) {
+                    
                     //esta en C
                     //cout << "Esta en C: " << i << " " << j << endl;
                     C[i].push_back({ j,0 });
                     // actualizar el minimo
-                    noOverlap_minB = min(noOverlap_minB, I[j].b);
                 }
             }
         }
@@ -108,7 +112,7 @@ vector<int> PathMinimoN2(Graph G, int s) {
             if (dist[e.first] > dist[v] + e.second) {
                 dist[e.first] = dist[v] + e.second;
                 parents[e.first] = v;
-                cout << "Ahora " << v << " es padre de " << e.first << endl;
+                //cout << "Ahora " << v << " es padre de " << e.first << endl;
             }
         }
     }
@@ -116,26 +120,98 @@ vector<int> PathMinimoN2(Graph G, int s) {
     return parents;
 }
 
+vector<int> DAGSort(Graph G, int s){
+    int n = G.size() /  2;
+    vector<int> dist(G.size(),2*n+2);
+    vector<int> parent(G.size(),-1);
+    dist[s] = 0;
+    for(int i = 0; i < n; i++){ // ta en topo
+        for(arista e: G[i]){ // in
+            if (dist[e.first] > dist[i] + e.second) {
+                dist[e.first] = dist[i] + e.second;
+                parent[e.first] = i;
+            }
+        }
+        for(arista e: G[i+n]){ //out
+            if (dist[e.first] > dist[i+n] + e.second) {
+                dist[e.first] = dist[i+n] + e.second;
+                parent[e.first] = i+n;
+            }
+        }
+    }
+    return parent;
+}
+
 int main() {
     //input -> n: cantidad de intervalos, n lineas con intervalos [A, B]
     int cantidadIntervalos; cin >> cantidadIntervalos;
     vector<Intervalo> I(cantidadIntervalos);
+    pair<int,int> minA = {-1,2*cantidadIntervalos}; // {indice intervalo, valor a}
+    pair<int,int> maxB = {-1,-1}; // {indice intevalo, valor b}
     for (int i = 0; i < I.size(); i++) {
         int a, b; cin >> a >> b;
         I[i] = {a,b};
         I[i].origin = i;
+        if (a<minA.second){
+            minA = {i, a};
+        }
+        if(b > maxB.second){
+
+            maxB = {i,b};
+        }
     }
-    Graph G = armarGrafo(I);
-    vector<int> padres = PathMinimoN2(G, 0);
+    if(minA.first == maxB.first){
+        cout << 2 << endl;
+        vector<int> sol = {minA.first};
+        sol.push_back((minA.first+1)%cantidadIntervalos);
+        sort(sol.begin(), sol.end());
+        for(int i: sol){
+            cout << i << " ";
+        }
+        cout << endl;
+        return 0;
+
+    }
+
+    vector<bool> contenido(cantidadIntervalos, false);
+    for(int i = 0; i < I.size(); i++){
+        for(int j = 0; j < I.size(); j++){
+            if(I[i].a < I[j].a && I[j].b < I[i].b){
+                contenido[j] = true;
+            }
+        }
+    }
+    /* for(bool b: contenido){
+        cout << b << " ";
+    }
+    cout << endl; */
+
+    Graph G = armarGrafo(I, contenido);
+    vector<int> padres = DAGSort(G, 0);
     int i = G.size() - 1;
+    vector<int> sol;
+    vector<bool> enable(cantidadIntervalos, true);
     while (i > 0) {
         int miPadre = padres[i];
+        int backup = miPadre;
         if (miPadre > cantidadIntervalos) {
             miPadre = miPadre - cantidadIntervalos - 2;
         }
-        cout << I[miPadre].a << " " << I[miPadre].b << " " << I[miPadre].origin << " ";
-        i = miPadre;
+        int temp = I[miPadre].origin;
+        if (temp != -1 && enable[temp]){
+            sol.push_back(temp);
+            enable[temp] = false;
+        }
+        /* cout << "miPadre es: " << miPadre << endl;
+        cout << "Yo soy: ";
+        cout << I[miPadre].a << " " << I[miPadre].b << " " << I[miPadre].origin << endl; */
+        i = backup;
     }
+    sort(sol.begin(), sol.end());
+    cout << sol.size() << endl;
+    for(int i: sol){
+        cout << i << " ";
+    }
+    cout << endl;
     return 0;
 }
-
