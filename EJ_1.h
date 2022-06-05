@@ -16,7 +16,7 @@ struct Graph{
     int M_;                      // No. of edges.
     vector<vector<int>> adjList_;   // Adjacency List.
     Graph(int V);            // Constructor
-    void addEdge(int v, int w);     // Self explanatory.
+    void addEdge(int v, int w);     
     void BFS(int s); 
     tuple<vector<vector<int>>, bool, int> bfsMinPathCounter(int s);
     vector<int> getPath(vector<vector<int>> parents, int v);

@@ -58,8 +58,8 @@ tuple<vector<vector<int>>, bool, int> Graph::bfsMinPathCounter(int s){
     return make_tuple(pred, isGeodetic, s);
 }
 
-void driver(Graph g){
-    vector<tuple<vector<vector<int>>, bool, int>> trees;    //Almaceno predecesores, si es geodetic, y la raíz.
+void ejecutar(Graph g){
+    vector<tuple<vector<vector<int>>, bool, int>> trees;   
     int check=0;
     for(int i=0; i<g.V_; i++){
         trees.push_back(g.bfsMinPathCounter(i));
@@ -98,7 +98,7 @@ void driver(Graph g){
                         for(int i=0; i<path.size(); i++){
                             cout << path[i] << " ";
                         }
-                        cout << endl; count--; if(count == 0){return;}  //Version fea para imprimir como piden
+                        cout << endl; count--; if(count == 0){return;} 
                     }
                 }
             }
@@ -116,7 +116,7 @@ int main()
     	g.addEdge(a, b);
     	M--;
     }
-    driver(g);
+    ejecutar(g);
     return 0;
 }
 
