@@ -52,8 +52,6 @@ bool Digraph::BellmanFord(vector<int> &dist, int source){
     return isNegativeCycle;
 }
 
-
-
 void Digraph::addSourceVertex(){
     int s = V_;
     V_++;
@@ -84,10 +82,9 @@ vector<int> Digraph::Dijkstra(int source){
 
 void Digraph::Johnson(){ 
     vector<int> distances;
-    bool ngc = BellmanFord(distances, 0);   //O(nm)
-    if(!ngc){
-        addSourceVertex();   //Added s as the last vertex in the graph. O(n)
-        BellmanFord(distances, V_-1);      //O(nm)
+    addSourceVertex();   //Added s as the last vertex in the graph. O(n)
+    bool segundo = BellmanFord(distances, V_-1);      //O(nm)
+    if(!segundo){
         Digraph G_n = {V_-1};              //O(n)
         for(int v = 0; v < V_-1; v++){     //O(n)
             for(auto w: adjList_[v]){      //O(m)
@@ -113,6 +110,24 @@ void Digraph::Johnson(){
         dist.clear();    //O(m) Space complexity
         };
     }
+    else{
+        return;
+    }
+    return;
+}
+
+Digraph loadFromFile(){
+    int N, M;
+    cin >> N >> M;
+    Digraph G(N);
+    for(int i = 0; i < M; i++){
+        int u, v, w;
+        cin >> u >> v >> w;
+        G.addEdge(u, v, w);
+    }
+
+    int k = 0;
+    return G;
 }
 
 int	main(){
@@ -138,13 +153,9 @@ int	main(){
     g.BellmanFord(dist, 0);
     */
     // /* Testing Johnson
-    Digraph g = {4};
-    g.addEdge(0,1,3);
-    g.addEdge(1,2,2);
-    g.addEdge(2,3,6);
-    g.addEdge(3,0,-1);
-    g.addEdge(1,3,-1);
-    g.Johnson();
+    //Digraph g = loadFromFile();
+    Digraph g2 = loadFromFile();
+    g2.Johnson();
     // */
    return 0;
 }
