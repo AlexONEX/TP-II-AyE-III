@@ -131,31 +131,7 @@ Digraph loadFromFile(){
 }
 
 int	main(){
-    /* Testing Dijkstra
-    Digraph g = {4};
-    g.addEdge(0,1,1);
-    g.addEdge(0,2,4);
-    g.addEdge(1,2,2);
-    g.addEdge(1,3,6);
-    g.addEdge(2,3,3);
-    vector<int> dist = g.Dijkstra(0);
-    for(int i = 0; i < g.V_; i++){
-        cout << "Vertex " << i << ": " << dist[i] << endl;
-    }*/
-    /* Testing BellmanFord
-    Digraph g = {5};
-    vector<int> dist; 
-    g.addEdge(0,1,-1);
-    g.addEdge(1,2,2);
-    g.addEdge(2,3,3);
-    g.addEdge(3,4,-3);
-    g.addEdge(4,0,-3);
-    g.BellmanFord(dist, 0);
-    */
-    // /* Testing Johnson
-    //Digraph g = loadFromFile();
     Digraph g2 = loadFromFile();
     g2.Johnson();
-    // */
-   return 0;
+    return 0;
 }
